@@ -120,7 +120,7 @@
   padding: 0 !important;
   align-items: stretch;
   justify-content: stretch;
-  z-index: 60;
+  z-index: 110;
 }
 
 .finder-window-root--fullscreen .finder-window__drift {

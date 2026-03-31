@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ContactMeWindow } from "./components/ContactMeWindow";
 import { FinderPortfolioWindow } from "./components/FinderPortfolioWindow";
 import { TerminalThanksWindow } from "./components/TerminalThanksWindow";
@@ -38,23 +38,35 @@ function App() {
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalMinimized, setTerminalMinimized] = useState(false);
 
+  const openFinderPortfolio = useCallback(() => {
+    if (finderOpen && finderMinimized) setFinderMinimized(false);
+    else if (!finderOpen) {
+      setFinderOpen(true);
+      setFinderMinimized(false);
+    }
+  }, [finderOpen, finderMinimized]);
+
+  const openContactsWindow = useCallback(() => {
+    if (contactsOpen && contactsMinimized) setContactsMinimized(false);
+    else if (!contactsOpen) {
+      setContactsOpen(true);
+      setContactsMinimized(false);
+    }
+  }, [contactsOpen, contactsMinimized]);
+
+  const openTerminalWindow = useCallback(() => {
+    if (terminalOpen && terminalMinimized) setTerminalMinimized(false);
+    else if (!terminalOpen) {
+      setTerminalOpen(true);
+      setTerminalMinimized(false);
+    }
+  }, [terminalOpen, terminalMinimized]);
+
   return (
     <div className="screen">
       <MenuBar
-        onPortfolioClick={() => {
-          if (finderOpen && finderMinimized) setFinderMinimized(false);
-          else if (!finderOpen) {
-            setFinderOpen(true);
-            setFinderMinimized(false);
-          }
-        }}
-        onContactClick={() => {
-          if (contactsOpen && contactsMinimized) setContactsMinimized(false);
-          else if (!contactsOpen) {
-            setContactsOpen(true);
-            setContactsMinimized(false);
-          }
-        }}
+        onPortfolioClick={openFinderPortfolio}
+        onContactClick={openContactsWindow}
         onResumeClick={() => {
           window.open("/resume.pdf", "_blank", "noopener,noreferrer");
         }}
@@ -136,30 +148,9 @@ function App() {
                 data-tooltip={tooltip}
                 title={tooltip}
                 onClick={() => {
-                  if (app === "finder") {
-                    if (finderOpen && finderMinimized)
-                      setFinderMinimized(false);
-                    else if (!finderOpen) {
-                      setFinderOpen(true);
-                      setFinderMinimized(false);
-                    }
-                  }
-                  if (app === "contacts") {
-                    if (contactsOpen && contactsMinimized)
-                      setContactsMinimized(false);
-                    else if (!contactsOpen) {
-                      setContactsOpen(true);
-                      setContactsMinimized(false);
-                    }
-                  }
-                  if (app === "terminal") {
-                    if (terminalOpen && terminalMinimized)
-                      setTerminalMinimized(false);
-                    else if (!terminalOpen) {
-                      setTerminalOpen(true);
-                      setTerminalMinimized(false);
-                    }
-                  }
+                  if (app === "finder") openFinderPortfolio();
+                  if (app === "contacts") openContactsWindow();
+                  if (app === "terminal") openTerminalWindow();
                 }}
               >
                 <span
