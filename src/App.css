@@ -77,6 +77,7 @@
 
 /* Override global `button` rules from index.css (outline, background, hover border) */
 .dock-glass .dock-icon-btn {
+  position: relative;
   display: grid;
   place-items: center;
   padding: 0;
@@ -88,6 +89,39 @@
   appearance: none;
   border-radius: 0;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* macOS-style name label above icon on hover */
+.dock-glass .dock-icon-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 20px);
+  transform: translate3d(-50%, 6px, 0);
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(38, 38, 38, 0.94);
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI", sans-serif;
+  white-space: nowrap;
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.4),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+  z-index: 60;
+}
+
+.dock-glass .dock-icon-btn:hover::after {
+  opacity: 1;
+  transform: translate3d(-50%, 0, 0);
 }
 
 .dock-glass .dock-icon-btn:hover {
@@ -143,6 +177,11 @@
   .dock-glass .dock-icon-btn:active .dock-icon-clip {
     transform: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .dock-glass .dock-icon-btn::after {
+    transition: opacity 0.1s ease;
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

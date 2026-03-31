@@ -7,21 +7,23 @@ import "./App.css";
 
 type DockIcon = {
   src: string;
-  label: string;
+  /** Shown on hover (macOS-style label) */
+  tooltip: string;
+  app: "finder" | "projectStore" | "contacts";
   active?: boolean;
   /** Crop tighter than default when the asset has extra margin (1 = no extra zoom) */
   innerZoom?: number;
 };
 
 const dockIcons: DockIcon[] = [
-  { src: "/finder.jpg", label: "Finder", innerZoom: 1.32 },
-  
+  { src: "/finder.jpg", tooltip: "Finder", app: "finder", innerZoom: 1.32 },
   {
     src: "/appstore.webp",
-    label: "App Store",
+    tooltip: "Project Store",
+    app: "projectStore",
     innerZoom: 1.52,
   },
-  { src: "/contacts.png", label: "Contacts" },
+  { src: "/contacts.png", tooltip: "Contacts", app: "contacts" },
 ];
 
 function App() {
@@ -78,21 +80,22 @@ function App() {
       />
       <nav className="dock-glass" aria-label="Application dock">
         <ul className="dock-items">
-          {dockIcons.map(({ src, label, active, innerZoom }) => (
+          {dockIcons.map(({ src, tooltip, app, active, innerZoom }) => (
             <li key={src} className="dock-item">
               <button
                 type="button"
                 className="dock-icon-btn"
-                title={label}
+                data-tooltip={tooltip}
+                title={tooltip}
                 onClick={() => {
-                  if (label === "Finder") {
+                  if (app === "finder") {
                     if (finderOpen && finderMinimized) setFinderMinimized(false);
                     else if (!finderOpen) {
                       setFinderOpen(true);
                       setFinderMinimized(false);
                     }
                   }
-                  if (label === "Contacts") {
+                  if (app === "contacts") {
                     if (contactsOpen && contactsMinimized)
                       setContactsMinimized(false);
                     else if (!contactsOpen) {
@@ -123,8 +126,8 @@ function App() {
                 </span>
               </button>
               {active ||
-              (label === "Finder" && finderOpen) ||
-              (label === "Contacts" && contactsOpen) ? (
+              (app === "finder" && finderOpen) ||
+              (app === "contacts" && contactsOpen) ? (
                 <span className="dock-dot" aria-hidden />
               ) : null}
             </li>
