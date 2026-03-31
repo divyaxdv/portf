@@ -4,6 +4,7 @@ import { ContactMeWindow } from "./components/ContactMeWindow";
 import { FinderPortfolioWindow } from "./components/FinderPortfolioWindow";
 import Grainient from "./pages/home";
 import "./App.css";
+import TextType from "./pages/text";
 
 type DockIcon = {
   src: string;
@@ -60,6 +61,19 @@ function App() {
           zoom={0.9}
         />
       </div>
+      <div className="home-hero-text">
+        <TextType
+          text={["Hy! This is Divya.", "Welcome to my portfolio!"]}
+          typingSpeed={75}
+          pauseDuration={1500}
+          showCursor
+          cursorCharacter="_"
+          deletingSpeed={50}
+          cursorBlinkDuration={0.5}
+          loop
+          className="home-hero-text__type"
+        />
+      </div>
       <FinderPortfolioWindow
         open={finderOpen}
         minimized={finderMinimized}
@@ -89,7 +103,8 @@ function App() {
                 title={tooltip}
                 onClick={() => {
                   if (app === "finder") {
-                    if (finderOpen && finderMinimized) setFinderMinimized(false);
+                    if (finderOpen && finderMinimized)
+                      setFinderMinimized(false);
                     else if (!finderOpen) {
                       setFinderOpen(true);
                       setFinderMinimized(false);

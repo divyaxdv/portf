@@ -10,6 +10,34 @@
   height: 100%;
 }
 
+/* Typing effect — centered over gradient (below modals / dock) */
+.home-hero-text {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  padding-bottom: min(28vh, 200px);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.home-hero-text .home-hero-text__type.text-type {
+  pointer-events: auto;
+  max-width: min(92vw, 40rem);
+  text-align: center;
+  font-size: clamp(1.35rem, 4.2vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 4px 28px rgba(0, 0, 0, 0.35);
+}
+
 .dock-glass {
   z-index: 50;
   --dock-icon-size: 56px;
