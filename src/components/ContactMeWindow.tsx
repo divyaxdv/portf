@@ -6,6 +6,8 @@ import {
   type ComponentType,
 } from "react";
 import { Copy, Link2 } from "lucide-react";
+import type { FocusOrder } from "../utils/windowStack";
+import { windowStackZIndex } from "../utils/windowStack";
 import "./FinderPortfolioWindow.css";
 import "./ContactMeWindow.css";
 
@@ -14,6 +16,8 @@ type ContactMeWindowProps = {
   minimized: boolean;
   onClose: () => void;
   onMinimizedChange: (minimized: boolean) => void;
+  focusOrder: FocusOrder;
+  onFocusWindow: () => void;
 };
 
 /** Replace with your email */
@@ -39,6 +43,8 @@ export function ContactMeWindow({
   minimized,
   onClose,
   onMinimizedChange,
+  focusOrder,
+  onFocusWindow,
 }: ContactMeWindowProps) {
   const dragRef = useRef<{
     startX: number;
@@ -133,14 +139,18 @@ export function ContactMeWindow({
     .filter(Boolean)
     .join(" ");
 
+  const stackZ = windowStackZIndex("contacts", focusOrder, fullscreen);
+
   return (
     <div
       className={rootClass}
       role="presentation"
       aria-hidden={!open}
+      style={{ zIndex: stackZ }}
     >
       <div
         className="finder-window__drift"
+        onPointerDownCapture={onFocusWindow}
         style={
           fullscreen
             ? { transform: "none", width: "100%", height: "100%" }

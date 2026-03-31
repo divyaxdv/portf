@@ -1,7 +1,6 @@
 .finder-window-root {
   position: fixed;
   inset: 0;
-  z-index: 40;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +119,6 @@
   padding: 0 !important;
   align-items: stretch;
   justify-content: stretch;
-  z-index: 110;
 }
 
 .finder-window-root--fullscreen .finder-window__drift {

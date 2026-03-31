@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { FocusOrder } from "../utils/windowStack";
+import { windowStackZIndex } from "../utils/windowStack";
 import "./FinderPortfolioWindow.css";
 import "./TerminalThanksWindow.css";
 
@@ -7,6 +9,8 @@ type TerminalThanksWindowProps = {
   minimized: boolean;
   onClose: () => void;
   onMinimizedChange: (minimized: boolean) => void;
+  focusOrder: FocusOrder;
+  onFocusWindow: () => void;
 };
 
 type LineKind = "normal" | "dim" | "art";
@@ -235,6 +239,8 @@ export function TerminalThanksWindow({
   minimized,
   onClose,
   onMinimizedChange,
+  focusOrder,
+  onFocusWindow,
 }: TerminalThanksWindowProps) {
   const dragRef = useRef<{
     startX: number;
@@ -369,10 +375,18 @@ export function TerminalThanksWindow({
     .filter(Boolean)
     .join(" ");
 
+  const stackZ = windowStackZIndex("terminal", focusOrder, fullscreen);
+
   return (
-    <div className={rootClass} role="presentation" aria-hidden={!open}>
+    <div
+      className={rootClass}
+      role="presentation"
+      aria-hidden={!open}
+      style={{ zIndex: stackZ }}
+    >
       <div
         className="finder-window__drift"
+        onPointerDownCapture={onFocusWindow}
         style={
           fullscreen
             ? { transform: "none", width: "100%", height: "100%" }

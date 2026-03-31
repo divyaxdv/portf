@@ -1,11 +1,3 @@
-.contact-me-window-root {
-  z-index: 41;
-}
-
-.contact-me-window-root.finder-window-root--fullscreen {
-  z-index: 110;
-}
-
 .contact-me-window.finder-window {
   width: min(94vw, 480px);
   height: auto;

@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { FocusOrder } from "../utils/windowStack";
+import { windowStackZIndex } from "../utils/windowStack";
 import "./FinderPortfolioWindow.css";
 
 type FinderPortfolioWindowProps = {
@@ -7,6 +9,8 @@ type FinderPortfolioWindowProps = {
   minimized: boolean;
   onClose: () => void;
   onMinimizedChange: (minimized: boolean) => void;
+  focusOrder: FocusOrder;
+  onFocusWindow: () => void;
 };
 
 const TECH = [
@@ -24,6 +28,8 @@ export function FinderPortfolioWindow({
   minimized,
   onClose,
   onMinimizedChange,
+  focusOrder,
+  onFocusWindow,
 }: FinderPortfolioWindowProps) {
   const dragRef = useRef<{
     startX: number;
@@ -108,14 +114,18 @@ export function FinderPortfolioWindow({
     .filter(Boolean)
     .join(" ");
 
+  const stackZ = windowStackZIndex("finder", focusOrder, fullscreen);
+
   return (
     <div
       className={rootClass}
       role="presentation"
       aria-hidden={!open}
+      style={{ zIndex: stackZ }}
     >
       <div
         className="finder-window__drift"
+        onPointerDownCapture={onFocusWindow}
         style={
           fullscreen
             ? { transform: "none", width: "100%", height: "100%" }

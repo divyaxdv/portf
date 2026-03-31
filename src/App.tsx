@@ -7,6 +7,12 @@ import { MenuBar } from "./components/MenuBar";
 import Grainient from "./pages/home";
 import "./App.css";
 import TextType from "./pages/text";
+import {
+  INITIAL_FOCUS_ORDER,
+  bumpFocusOrder,
+  type AppWindow,
+  type FocusOrder,
+} from "./utils/windowStack";
 
 type DockIcon = {
   src: string;
@@ -37,6 +43,11 @@ function App() {
   const [contactsMinimized, setContactsMinimized] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalMinimized, setTerminalMinimized] = useState(false);
+  const [focusOrder, setFocusOrder] = useState<FocusOrder>(INITIAL_FOCUS_ORDER);
+
+  const bumpFocus = useCallback((app: AppWindow) => {
+    setFocusOrder((prev) => bumpFocusOrder(prev, app));
+  }, []);
 
   const openFinderPortfolio = useCallback(() => {
     if (finderOpen && finderMinimized) setFinderMinimized(false);
@@ -44,7 +55,8 @@ function App() {
       setFinderOpen(true);
       setFinderMinimized(false);
     }
-  }, [finderOpen, finderMinimized]);
+    bumpFocus("finder");
+  }, [finderOpen, finderMinimized, bumpFocus]);
 
   const openContactsWindow = useCallback(() => {
     if (contactsOpen && contactsMinimized) setContactsMinimized(false);
@@ -52,7 +64,8 @@ function App() {
       setContactsOpen(true);
       setContactsMinimized(false);
     }
-  }, [contactsOpen, contactsMinimized]);
+    bumpFocus("contacts");
+  }, [contactsOpen, contactsMinimized, bumpFocus]);
 
   const openTerminalWindow = useCallback(() => {
     if (terminalOpen && terminalMinimized) setTerminalMinimized(false);
@@ -60,7 +73,8 @@ function App() {
       setTerminalOpen(true);
       setTerminalMinimized(false);
     }
-  }, [terminalOpen, terminalMinimized]);
+    bumpFocus("terminal");
+  }, [terminalOpen, terminalMinimized, bumpFocus]);
 
   return (
     <div className="screen">
@@ -119,6 +133,8 @@ function App() {
           setFinderMinimized(false);
         }}
         onMinimizedChange={setFinderMinimized}
+        focusOrder={focusOrder}
+        onFocusWindow={() => bumpFocus("finder")}
       />
       <ContactMeWindow
         open={contactsOpen}
@@ -128,6 +144,8 @@ function App() {
           setContactsMinimized(false);
         }}
         onMinimizedChange={setContactsMinimized}
+        focusOrder={focusOrder}
+        onFocusWindow={() => bumpFocus("contacts")}
       />
       <TerminalThanksWindow
         open={terminalOpen}
@@ -137,6 +155,8 @@ function App() {
           setTerminalMinimized(false);
         }}
         onMinimizedChange={setTerminalMinimized}
+        focusOrder={focusOrder}
+        onFocusWindow={() => bumpFocus("terminal")}
       />
       <nav className="dock-glass" aria-label="Application dock">
         <ul className="dock-items">
