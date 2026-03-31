@@ -11,7 +11,9 @@ import "./ContactMeWindow.css";
 
 type ContactMeWindowProps = {
   open: boolean;
+  minimized: boolean;
   onClose: () => void;
+  onMinimizedChange: (minimized: boolean) => void;
 };
 
 /** Replace with your email */
@@ -32,7 +34,12 @@ const SOCIALS: {
   { label: "Instagram", href: "https://instagram.com", Icon: IconInstagram },
 ];
 
-export function ContactMeWindow({ open, onClose }: ContactMeWindowProps) {
+export function ContactMeWindow({
+  open,
+  minimized,
+  onClose,
+  onMinimizedChange,
+}: ContactMeWindowProps) {
   const dragRef = useRef<{
     startX: number;
     startY: number;
@@ -41,25 +48,41 @@ export function ContactMeWindow({ open, onClose }: ContactMeWindowProps) {
   } | null>(null);
   const [offset, setOffset] = useState({ x: 48, y: 36 });
   const [copied, setCopied] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || minimized) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key !== "Escape") return;
+      if (fullscreen) {
+        setFullscreen(false);
+        return;
+      }
+      onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open, minimized, onClose, fullscreen]);
 
   useEffect(() => {
     if (!open) {
       setOffset({ x: 48, y: 36 });
       setCopied(false);
+      setFullscreen(false);
     }
   }, [open]);
 
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen((f) => {
+      const next = !f;
+      if (next) onMinimizedChange(false);
+      return next;
+    });
+  }, [onMinimizedChange]);
+
   const onTitleMouseDown = useCallback(
     (e: React.MouseEvent) => {
+      if (fullscreen) return;
       if ((e.target as HTMLElement).closest(".finder-window__traffic")) return;
       e.preventDefault();
       dragRef.current = {
@@ -85,7 +108,7 @@ export function ContactMeWindow({ open, onClose }: ContactMeWindowProps) {
       window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp);
     },
-    [offset.x, offset.y],
+    [offset.x, offset.y, fullscreen],
   );
 
   const copyEmail = useCallback(() => {
@@ -96,19 +119,36 @@ export function ContactMeWindow({ open, onClose }: ContactMeWindowProps) {
   }, []);
 
   if (!open) return null;
+  if (minimized) return null;
+
+  const rootClass =
+    "finder-window-root contact-me-window-root" +
+    (fullscreen ? " finder-window-root--fullscreen" : "");
+
+  const windowClass = [
+    "finder-window",
+    "contact-me-window",
+    fullscreen ? "finder-window--fullscreen" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div
-      className="finder-window-root contact-me-window-root"
+      className={rootClass}
       role="presentation"
       aria-hidden={!open}
     >
       <div
         className="finder-window__drift"
-        style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+        style={
+          fullscreen
+            ? { transform: "none", width: "100%", height: "100%" }
+            : { transform: `translate(${offset.x}px, ${offset.y}px)` }
+        }
       >
         <div
-          className="finder-window contact-me-window"
+          className={windowClass}
           role="dialog"
           aria-modal="true"
           aria-labelledby="contact-window-title"
@@ -117,20 +157,34 @@ export function ContactMeWindow({ open, onClose }: ContactMeWindowProps) {
             className="finder-window__titlebar"
             onMouseDown={onTitleMouseDown}
           >
-            <div className="finder-window__traffic" aria-hidden>
+            <div className="finder-window__traffic">
               <button
                 type="button"
                 className="finder-window__dot finder-window__dot--close"
-                onClick={onClose}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                }}
                 aria-label="Close window"
               />
-              <span
+              <button
+                type="button"
                 className="finder-window__dot finder-window__dot--min"
-                aria-hidden
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFullscreen(false);
+                  onMinimizedChange(true);
+                }}
+                aria-label="Minimize window"
               />
-              <span
+              <button
+                type="button"
                 className="finder-window__dot finder-window__dot--zoom"
-                aria-hidden
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFullscreen();
+                }}
+                aria-label={fullscreen ? "Exit full screen" : "Enter full screen"}
               />
             </div>
             <div

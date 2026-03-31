@@ -77,12 +77,64 @@
   filter: brightness(1.08);
 }
 
+.finder-window__traffic .finder-window__dot {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.finder-window__traffic .finder-window__dot:focus,
+.finder-window__traffic .finder-window__dot:focus-visible,
+.finder-window__traffic .finder-window__dot:active {
+  outline: none !important;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.25) !important;
+}
+
 .finder-window__dot--min {
   background: #febc2e;
+  cursor: pointer;
+}
+
+.finder-window__dot--min:hover {
+  filter: brightness(1.08);
 }
 
 .finder-window__dot--zoom {
   background: #28c840;
+  cursor: pointer;
+}
+
+.finder-window__dot--zoom:hover {
+  filter: brightness(1.08);
+}
+
+.finder-window--fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0;
+}
+
+.finder-window-root--fullscreen {
+  flex-direction: column;
+  padding: 0 !important;
+  align-items: stretch;
+  justify-content: stretch;
+  z-index: 60;
+}
+
+.finder-window-root--fullscreen .finder-window__drift {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  animation: none;
+}
+
+.finder-window-root--fullscreen .finder-window--fullscreen {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .finder-window__title {

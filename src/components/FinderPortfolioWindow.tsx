@@ -3,7 +3,10 @@ import "./FinderPortfolioWindow.css";
 
 type FinderPortfolioWindowProps = {
   open: boolean;
+  /** Hidden (yellow) — window unmounts; dock dot stays while `open` is true */
+  minimized: boolean;
   onClose: () => void;
+  onMinimizedChange: (minimized: boolean) => void;
 };
 
 const TECH = [
@@ -18,7 +21,9 @@ const TECH = [
 
 export function FinderPortfolioWindow({
   open,
+  minimized,
   onClose,
+  onMinimizedChange,
 }: FinderPortfolioWindowProps) {
   const dragRef = useRef<{
     startX: number;
@@ -27,22 +32,40 @@ export function FinderPortfolioWindow({
     origY: number;
   } | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [fullscreen, setFullscreen] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || minimized) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key !== "Escape") return;
+      if (fullscreen) {
+        setFullscreen(false);
+        return;
+      }
+      onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open, minimized, onClose, fullscreen]);
 
   useEffect(() => {
-    if (!open) setOffset({ x: 0, y: 0 });
+    if (!open) {
+      setOffset({ x: 0, y: 0 });
+      setFullscreen(false);
+    }
   }, [open]);
+
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen((f) => {
+      const next = !f;
+      if (next) onMinimizedChange(false);
+      return next;
+    });
+  }, [onMinimizedChange]);
 
   const onTitleMouseDown = useCallback(
     (e: React.MouseEvent) => {
+      if (fullscreen) return;
       if ((e.target as HTMLElement).closest(".finder-window__traffic")) return;
       e.preventDefault();
       dragRef.current = {
@@ -68,23 +91,39 @@ export function FinderPortfolioWindow({
       window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp);
     },
-    [offset.x, offset.y],
+    [offset.x, offset.y, fullscreen],
   );
 
   if (!open) return null;
+  if (minimized) return null;
+
+  const rootClass =
+    "finder-window-root" +
+    (fullscreen ? " finder-window-root--fullscreen" : "");
+
+  const windowClass = [
+    "finder-window",
+    fullscreen ? "finder-window--fullscreen" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div
-      className="finder-window-root"
+      className={rootClass}
       role="presentation"
       aria-hidden={!open}
     >
       <div
         className="finder-window__drift"
-        style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+        style={
+          fullscreen
+            ? { transform: "none", width: "100%", height: "100%" }
+            : { transform: `translate(${offset.x}px, ${offset.y}px)` }
+        }
       >
         <div
-          className="finder-window"
+          className={windowClass}
           role="dialog"
           aria-modal="true"
           aria-labelledby="finder-window-title"
@@ -93,20 +132,34 @@ export function FinderPortfolioWindow({
           className="finder-window__titlebar"
           onMouseDown={onTitleMouseDown}
         >
-          <div className="finder-window__traffic" aria-hidden>
+          <div className="finder-window__traffic">
             <button
               type="button"
               className="finder-window__dot finder-window__dot--close"
-              onClick={onClose}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
               aria-label="Close window"
             />
-            <span
+            <button
+              type="button"
               className="finder-window__dot finder-window__dot--min"
-              aria-hidden
+              onClick={(e) => {
+                e.stopPropagation();
+                setFullscreen(false);
+                onMinimizedChange(true);
+              }}
+              aria-label="Minimize window"
             />
-            <span
+            <button
+              type="button"
               className="finder-window__dot finder-window__dot--zoom"
-              aria-hidden
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFullscreen();
+              }}
+              aria-label={fullscreen ? "Exit full screen" : "Enter full screen"}
             />
           </div>
           <div className="finder-window__title" id="finder-window-title">

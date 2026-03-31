@@ -26,7 +26,9 @@ const dockIcons: DockIcon[] = [
 
 function App() {
   const [finderOpen, setFinderOpen] = useState(false);
+  const [finderMinimized, setFinderMinimized] = useState(false);
   const [contactsOpen, setContactsOpen] = useState(false);
+  const [contactsMinimized, setContactsMinimized] = useState(false);
 
   return (
     <div className="screen">
@@ -58,11 +60,21 @@ function App() {
       </div>
       <FinderPortfolioWindow
         open={finderOpen}
-        onClose={() => setFinderOpen(false)}
+        minimized={finderMinimized}
+        onClose={() => {
+          setFinderOpen(false);
+          setFinderMinimized(false);
+        }}
+        onMinimizedChange={setFinderMinimized}
       />
       <ContactMeWindow
         open={contactsOpen}
-        onClose={() => setContactsOpen(false)}
+        minimized={contactsMinimized}
+        onClose={() => {
+          setContactsOpen(false);
+          setContactsMinimized(false);
+        }}
+        onMinimizedChange={setContactsMinimized}
       />
       <nav className="dock-glass" aria-label="Application dock">
         <ul className="dock-items">
@@ -73,8 +85,21 @@ function App() {
                 className="dock-icon-btn"
                 title={label}
                 onClick={() => {
-                  if (label === "Finder") setFinderOpen(true);
-                  if (label === "Contacts") setContactsOpen(true);
+                  if (label === "Finder") {
+                    if (finderOpen && finderMinimized) setFinderMinimized(false);
+                    else if (!finderOpen) {
+                      setFinderOpen(true);
+                      setFinderMinimized(false);
+                    }
+                  }
+                  if (label === "Contacts") {
+                    if (contactsOpen && contactsMinimized)
+                      setContactsMinimized(false);
+                    else if (!contactsOpen) {
+                      setContactsOpen(true);
+                      setContactsMinimized(false);
+                    }
+                  }
                 }}
               >
                 <span
