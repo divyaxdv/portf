@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { useState } from "react";
 import { ContactMeWindow } from "./components/ContactMeWindow";
 import { FinderPortfolioWindow } from "./components/FinderPortfolioWindow";
+import { TerminalThanksWindow } from "./components/TerminalThanksWindow";
 import { MenuBar } from "./components/MenuBar";
 import Grainient from "./pages/home";
 import "./App.css";
@@ -11,7 +12,7 @@ type DockIcon = {
   src: string;
   /** Shown on hover (macOS-style label) */
   tooltip: string;
-  app: "finder" | "projectStore" | "contacts";
+  app: "finder" | "projectStore" | "contacts" | "terminal";
   active?: boolean;
   /** Crop tighter than default when the asset has extra margin (1 = no extra zoom) */
   innerZoom?: number;
@@ -26,6 +27,7 @@ const dockIcons: DockIcon[] = [
     innerZoom: 1.52,
   },
   { src: "/contacts.png", tooltip: "Contacts", app: "contacts" },
+  { src: "/terminal.png", tooltip: "Terminal", app: "terminal", innerZoom: 1.32 },
 ];
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
   const [finderMinimized, setFinderMinimized] = useState(false);
   const [contactsOpen, setContactsOpen] = useState(false);
   const [contactsMinimized, setContactsMinimized] = useState(false);
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [terminalMinimized, setTerminalMinimized] = useState(false);
 
   return (
     <div className="screen">
@@ -113,6 +117,15 @@ function App() {
         }}
         onMinimizedChange={setContactsMinimized}
       />
+      <TerminalThanksWindow
+        open={terminalOpen}
+        minimized={terminalMinimized}
+        onClose={() => {
+          setTerminalOpen(false);
+          setTerminalMinimized(false);
+        }}
+        onMinimizedChange={setTerminalMinimized}
+      />
       <nav className="dock-glass" aria-label="Application dock">
         <ul className="dock-items">
           {dockIcons.map(({ src, tooltip, app, active, innerZoom }) => (
@@ -139,6 +152,14 @@ function App() {
                       setContactsMinimized(false);
                     }
                   }
+                  if (app === "terminal") {
+                    if (terminalOpen && terminalMinimized)
+                      setTerminalMinimized(false);
+                    else if (!terminalOpen) {
+                      setTerminalOpen(true);
+                      setTerminalMinimized(false);
+                    }
+                  }
                 }}
               >
                 <span
@@ -163,7 +184,8 @@ function App() {
               </button>
               {active ||
               (app === "finder" && finderOpen) ||
-              (app === "contacts" && contactsOpen) ? (
+              (app === "contacts" && contactsOpen) ||
+              (app === "terminal" && terminalOpen) ? (
                 <span className="dock-dot" aria-hidden />
               ) : null}
             </li>
