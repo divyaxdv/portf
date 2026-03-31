@@ -55,11 +55,12 @@ function App() {
           window.open("/resume.pdf", "_blank", "noopener,noreferrer");
         }}
       />
+      {/* "#B19EEF" */}
       <div className="gradient-layer">
         <Grainient
-          color1="#FF9FFC"
-          color2="#5227FF"
-          color3="#B19EEF"
+          color1="#5227FF"
+          color2="#8B5CF6"
+          color3="#5227FF"
           timeSpeed={0.25}
           colorBalance={0}
           warpStrength={1}

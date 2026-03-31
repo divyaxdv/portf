@@ -89,21 +89,21 @@ export function MenuBar({
               className="menu-bar__link"
               onClick={onProjectClick}
             >
-              project
+              Projects
             </button>
             <button
               type="button"
               className="menu-bar__link"
               onClick={onContactClick}
             >
-              contact
+              Contact
             </button>
             <button
               type="button"
               className="menu-bar__link"
               onClick={onResumeClick}
             >
-              resume
+              Resume
             </button>
           </nav>
         </div>

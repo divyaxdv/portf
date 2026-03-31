@@ -83,8 +83,8 @@
   border: none;
   background: transparent;
   color: rgba(255, 255, 255, 0.96);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   font-family:
     system-ui,
     -apple-system,
@@ -110,14 +110,14 @@
 }
 
 .menu-bar__link--brand {
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .menu-bar__clock {
   margin: 0;
   padding: 0;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 670;
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.96);
   font-family:
@@ -135,11 +135,11 @@
 @media (max-width: 640px) {
   .menu-bar__link {
     padding: 2px 6px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .menu-bar__clock {
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 
