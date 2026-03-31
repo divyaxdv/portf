@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { useState } from "react";
 import { ContactMeWindow } from "./components/ContactMeWindow";
 import { FinderPortfolioWindow } from "./components/FinderPortfolioWindow";
+import { MenuBar } from "./components/MenuBar";
 import Grainient from "./pages/home";
 import "./App.css";
 import TextType from "./pages/text";
@@ -35,6 +36,25 @@ function App() {
 
   return (
     <div className="screen">
+      <MenuBar
+        onPortfolioClick={() => {
+          if (finderOpen && finderMinimized) setFinderMinimized(false);
+          else if (!finderOpen) {
+            setFinderOpen(true);
+            setFinderMinimized(false);
+          }
+        }}
+        onContactClick={() => {
+          if (contactsOpen && contactsMinimized) setContactsMinimized(false);
+          else if (!contactsOpen) {
+            setContactsOpen(true);
+            setContactsMinimized(false);
+          }
+        }}
+        onResumeClick={() => {
+          window.open("/resume.pdf", "_blank", "noopener,noreferrer");
+        }}
+      />
       <div className="gradient-layer">
         <Grainient
           color1="#FF9FFC"
