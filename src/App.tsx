@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { useCallback, useState } from "react";
 import { ContactMeWindow } from "./components/ContactMeWindow";
 import { FinderPortfolioWindow } from "./components/FinderPortfolioWindow";
+import { ProjectStoreWindow } from "./components/ProjectStoreWindow";
 import { ResumeWindow } from "./components/ResumeWindow";
 import { TerminalThanksWindow } from "./components/TerminalThanksWindow";
 import { MenuBar } from "./components/MenuBar";
@@ -34,7 +35,12 @@ const dockIcons: DockIcon[] = [
     innerZoom: 1.52,
   },
   { src: "/contacts.png", tooltip: "Contacts", app: "contacts" },
-  { src: "/terminal.png", tooltip: "Terminal", app: "terminal", innerZoom: 1.32 },
+  {
+    src: "/terminal.png",
+    tooltip: "Terminal",
+    app: "terminal",
+    innerZoom: 1.32,
+  },
 ];
 
 function App() {
@@ -42,6 +48,8 @@ function App() {
   const [finderMinimized, setFinderMinimized] = useState(false);
   const [contactsOpen, setContactsOpen] = useState(false);
   const [contactsMinimized, setContactsMinimized] = useState(false);
+  const [projectStoreOpen, setProjectStoreOpen] = useState(false);
+  const [projectStoreMinimized, setProjectStoreMinimized] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalMinimized, setTerminalMinimized] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
@@ -70,6 +78,15 @@ function App() {
     bumpFocus("contacts");
   }, [contactsOpen, contactsMinimized, bumpFocus]);
 
+  const openProjectStoreWindow = useCallback(() => {
+    if (projectStoreOpen && projectStoreMinimized) setProjectStoreMinimized(false);
+    else if (!projectStoreOpen) {
+      setProjectStoreOpen(true);
+      setProjectStoreMinimized(false);
+    }
+    bumpFocus("projectStore");
+  }, [projectStoreOpen, projectStoreMinimized, bumpFocus]);
+
   const openTerminalWindow = useCallback(() => {
     if (terminalOpen && terminalMinimized) setTerminalMinimized(false);
     else if (!terminalOpen) {
@@ -92,6 +109,7 @@ function App() {
     <div className="screen">
       <MenuBar
         onPortfolioClick={openFinderPortfolio}
+        onProjectClick={openProjectStoreWindow}
         onContactClick={openContactsWindow}
         onResumeClick={openResumeWindow}
       />
@@ -158,6 +176,17 @@ function App() {
         focusOrder={focusOrder}
         onFocusWindow={() => bumpFocus("contacts")}
       />
+      <ProjectStoreWindow
+        open={projectStoreOpen}
+        minimized={projectStoreMinimized}
+        onClose={() => {
+          setProjectStoreOpen(false);
+          setProjectStoreMinimized(false);
+        }}
+        onMinimizedChange={setProjectStoreMinimized}
+        focusOrder={focusOrder}
+        onFocusWindow={() => bumpFocus("projectStore")}
+      />
       <TerminalThanksWindow
         open={terminalOpen}
         minimized={terminalMinimized}
@@ -191,6 +220,7 @@ function App() {
                 title={tooltip}
                 onClick={() => {
                   if (app === "finder") openFinderPortfolio();
+                  if (app === "projectStore") openProjectStoreWindow();
                   if (app === "contacts") openContactsWindow();
                   if (app === "terminal") openTerminalWindow();
                 }}
@@ -217,6 +247,7 @@ function App() {
               </button>
               {active ||
               (app === "finder" && finderOpen) ||
+              (app === "projectStore" && projectStoreOpen) ||
               (app === "contacts" && contactsOpen) ||
               (app === "terminal" && terminalOpen) ? (
                 <span className="dock-dot" aria-hidden />
