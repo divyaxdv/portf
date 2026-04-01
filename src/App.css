@@ -129,13 +129,32 @@
 }
 
 @media (max-width: 640px) {
+  .menu-bar__inner {
+    padding: 0 10px 0 8px;
+    gap: 6px;
+  }
+
+  .menu-bar__left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .menu-bar__nav {
+    min-width: 0;
+  }
+
+  .menu-bar__link--brand {
+    display: none;
+  }
+
   .menu-bar__link {
-    padding: 2px 6px;
-    font-size: 13px;
+    padding: 2px 5px;
+    font-size: 12px;
   }
 
   .menu-bar__clock {
-    font-size: 13px;
+    font-size: 12px;
+    letter-spacing: 0;
   }
 }
 
