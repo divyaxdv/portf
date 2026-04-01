@@ -1,7 +1,7 @@
 .contact-me-window.finder-window {
   width: min(94vw, 480px);
   height: auto;
-  min-height: min(72vh, 520px);
+  min-height: 0;
   max-height: calc(100vh - 100px);
 }
 
@@ -67,7 +67,8 @@
   margin: 0 0 1rem;
   font-size: 0.88rem;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.45);
+  color: #00ff66;
+  text-shadow: 0 0 6px rgba(0, 255, 102, 0.28);
 }
 
 .contact-me-actions {
@@ -92,82 +93,69 @@
   text-decoration: none;
   transition:
     border-color 0.15s ease,
-    background 0.15s ease;
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .contact-me-pill:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 255, 0, 0.45);
+  background: rgba(0, 255, 0, 0.08);
+  color: #00ff66;
+  text-shadow: 0 0 6px rgba(0, 255, 102, 0.3);
+}
+
+.contact-me-pill:focus,
+.contact-me-pill:focus-visible,
+.contact-me-pill:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.contact-me-pill--copied {
+  border-color: rgba(0, 255, 0, 0.45);
+  background: rgba(0, 255, 0, 0.08);
+  color: #00ff66;
+  text-shadow: 0 0 6px rgba(0, 255, 102, 0.3);
 }
 
 .contact-me-pill--link {
   color: rgba(255, 255, 255, 0.88);
 }
 
-.contact-me-social-panel {
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.85rem 0.75rem;
-}
-
 .contact-me-socials {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .contact-me-social-tile {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
   transition:
-    background 0.15s ease,
-    transform 0.15s ease;
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    color 0.15s ease,
+    filter 0.15s ease;
 }
 
 .contact-me-social-tile:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.04);
+  opacity: 1;
+  color: #00ff66;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 102, 0.35));
 }
 
 .contact-me-social-icon {
-  width: 22px;
-  height: 22px;
-}
-
-.contact-me-socials li:nth-child(1) .contact-me-social-tile {
-  color: #0a66c2;
-}
-
-.contact-me-socials li:nth-child(2) .contact-me-social-tile {
-  color: #ff0000;
-}
-
-.contact-me-socials li:nth-child(3) .contact-me-social-tile {
-  color: #fff;
-}
-
-.contact-me-socials li:nth-child(4) .contact-me-social-tile {
-  color: #5865f2;
-}
-
-.contact-me-socials li:nth-child(5) .contact-me-social-tile {
-  color: #fff;
-}
-
-.contact-me-socials li:nth-child(7) .contact-me-social-tile {
-  color: #e4405f;
+  width: 26px;
+  height: 26px;
 }
 
 @media (max-width: 520px) {

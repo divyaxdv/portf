@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { useCallback, useState } from "react";
 import { ContactMeWindow } from "./components/ContactMeWindow";
 import { FinderPortfolioWindow } from "./components/FinderPortfolioWindow";
+import { ResumeWindow } from "./components/ResumeWindow";
 import { TerminalThanksWindow } from "./components/TerminalThanksWindow";
 import { MenuBar } from "./components/MenuBar";
 import Grainient from "./pages/home";
@@ -43,6 +44,8 @@ function App() {
   const [contactsMinimized, setContactsMinimized] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalMinimized, setTerminalMinimized] = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const [resumeMinimized, setResumeMinimized] = useState(false);
   const [focusOrder, setFocusOrder] = useState<FocusOrder>(INITIAL_FOCUS_ORDER);
 
   const bumpFocus = useCallback((app: AppWindow) => {
@@ -76,14 +79,21 @@ function App() {
     bumpFocus("terminal");
   }, [terminalOpen, terminalMinimized, bumpFocus]);
 
+  const openResumeWindow = useCallback(() => {
+    if (resumeOpen && resumeMinimized) setResumeMinimized(false);
+    else if (!resumeOpen) {
+      setResumeOpen(true);
+      setResumeMinimized(false);
+    }
+    bumpFocus("resume");
+  }, [resumeOpen, resumeMinimized, bumpFocus]);
+
   return (
     <div className="screen">
       <MenuBar
         onPortfolioClick={openFinderPortfolio}
         onContactClick={openContactsWindow}
-        onResumeClick={() => {
-          window.open("/resume.pdf", "_blank", "noopener,noreferrer");
-        }}
+        onResumeClick={openResumeWindow}
       />
       {/* "#B19EEF" */}
       <div className="gradient-layer">
@@ -133,6 +143,7 @@ function App() {
           setFinderMinimized(false);
         }}
         onMinimizedChange={setFinderMinimized}
+        onResumeOpen={openResumeWindow}
         focusOrder={focusOrder}
         onFocusWindow={() => bumpFocus("finder")}
       />
@@ -157,6 +168,17 @@ function App() {
         onMinimizedChange={setTerminalMinimized}
         focusOrder={focusOrder}
         onFocusWindow={() => bumpFocus("terminal")}
+      />
+      <ResumeWindow
+        open={resumeOpen}
+        minimized={resumeMinimized}
+        onClose={() => {
+          setResumeOpen(false);
+          setResumeMinimized(false);
+        }}
+        onMinimizedChange={setResumeMinimized}
+        focusOrder={focusOrder}
+        onFocusWindow={() => bumpFocus("resume")}
       />
       <nav className="dock-glass" aria-label="Application dock">
         <ul className="dock-items">

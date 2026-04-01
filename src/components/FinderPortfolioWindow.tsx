@@ -10,6 +10,7 @@ type FinderPortfolioWindowProps = {
   minimized: boolean;
   onClose: () => void;
   onMinimizedChange: (minimized: boolean) => void;
+  onResumeOpen: () => void;
   focusOrder: FocusOrder;
   onFocusWindow: () => void;
 };
@@ -23,6 +24,7 @@ export function FinderPortfolioWindow({
   minimized,
   onClose,
   onMinimizedChange,
+  onResumeOpen,
   focusOrder,
   onFocusWindow,
 }: FinderPortfolioWindowProps) {
@@ -271,6 +273,13 @@ export function FinderPortfolioWindow({
                     <span className="finder-portfolio__dot finder-portfolio__dot--blue" />
                     Pune, India
                   </span>
+                  <button
+                    type="button"
+                    className="finder-portfolio__badge"
+                    onClick={onResumeOpen}
+                  >
+                    Resume
+                  </button>
                   {/* <span className="finder-portfolio__badge">
                     <span className="finder-portfolio__dot finder-portfolio__dot--green" />
                     Available for Work
@@ -278,7 +287,7 @@ export function FinderPortfolioWindow({
                 </div>
 
                 <p className="finder-portfolio__bio">
-                  Turns vague ideas into fast, reliable systems—from refined
+                  Building ideas into fast, reliable systems—from refined
                   interfaces to APIs, cloud, and containers.
                 </p>
 

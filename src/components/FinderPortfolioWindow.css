@@ -244,13 +244,45 @@
 }
 
 .finder-portfolio__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  border: 1px dashed rgba(255, 255, 255, 0.22);
-  color: rgba(255, 255, 255, 0.65);
+  display: inline;
+  padding: 0;
+  border: none;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  color: #00ff66;
+  text-decoration: none;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 5px rgba(0, 255, 102, 0.22);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+.finder-portfolio__badge:hover {
+  color: #39ff84;
+  opacity: 0.9;
+  text-decoration: underline;
+  text-decoration-color: #00ff66;
+  text-underline-offset: 3px;
+}
+
+.finder-portfolio__badge:focus,
+.finder-portfolio__badge:focus-visible,
+.finder-portfolio__badge:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.finder-portfolio__badge:focus-visible {
+  text-decoration: underline;
+  text-decoration-color: #00ff66;
+  text-underline-offset: 3px;
 }
 
 .finder-portfolio__dot {
