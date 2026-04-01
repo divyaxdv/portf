@@ -51,7 +51,7 @@ const PROJECTS: {
     name: "My Cloud",
     summary:
       "Built as a smart cloud vault, My Cloud handles secure file uploads/downloads with S3 signed URLs + JWT auth, then pushes files through an async TensorFlow.js worker pipeline (SQS) to auto-classify content into folders and tags while MongoDB keeps metadata retrieval fast and user-aware.",
-    previewSrc: "/images.png",
+    previewSrc: "/Mycloud Search files.png",
     previewAlt: "My Cloud project preview",
     links: [
       { kind: "github", href: "https://github.com/divyaxdv/mycloud" },
@@ -69,7 +69,7 @@ const PROJECTS: {
     name: "RFP-AI",
     summary:
       "RFP-AI converts messy requirement threads into structured procurement workflows, automates IMAP/SMTP proposal intake with lifecycle tracking and audit logs, and runs an LLM-first evaluation flow (Groq with Ollama fallback) to produce clear comparison insights and decision-ready scoring.",
-    previewSrc: "/images.png",
+    previewSrc: "/Create RFP.png",
     previewAlt: "RFP-AI project preview",
     links: [
       { kind: "github", href: "https://github.com/divyaxdv/RFP-AI" },
@@ -88,7 +88,7 @@ const PROJECTS: {
     name: "Docs",
     summary:
       "Docs is a collaborative editor inspired by modern writing tools: rich blocks via React-Quill, UUID-based document sessions, and socket-powered real-time co-editing, finished with one-click PDF export using jsPDF and deployed end-to-end for everyday team usage.",
-    previewSrc: "/images.png",
+    previewSrc: "/DOCS EXPORT AS.png",
     previewAlt: "Docs project preview",
     links: [
       { kind: "github", href: "https://github.com/divyaxdv/docs.client" },
@@ -259,7 +259,14 @@ export function ProjectStoreWindow({
           <div className="finder-window__body project-store-window__body">
             <div className="project-store-grid">
               {PROJECTS.map((project) => (
-                <article key={project.name} className="project-card">
+                <article
+                  key={project.name}
+                  className={
+                    "project-card" +
+                    (project.name === "RFP-AI" ? " project-card--rfp" : "") +
+                    (project.name === "Docs" ? " project-card--docs" : "")
+                  }
+                >
                   <div className="project-card__preview-wrap">
                     <img
                       className="project-card__preview"
