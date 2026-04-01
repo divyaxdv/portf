@@ -217,7 +217,6 @@ function App() {
                 type="button"
                 className="dock-icon-btn"
                 data-tooltip={tooltip}
-                title={tooltip}
                 onClick={() => {
                   if (app === "finder") openFinderPortfolio();
                   if (app === "projectStore") openProjectStoreWindow();
