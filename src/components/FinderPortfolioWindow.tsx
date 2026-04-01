@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { FocusOrder } from "../utils/windowStack";
 import { windowStackZIndex } from "../utils/windowStack";
 import "./FinderPortfolioWindow.css";
+import { FinderPortfolioStack } from "./FinderPortfolioStack";
 
 type FinderPortfolioWindowProps = {
   open: boolean;
@@ -13,15 +14,9 @@ type FinderPortfolioWindowProps = {
   onFocusWindow: () => void;
 };
 
-const TECH = [
-  { name: "TypeScript", color: "#3178c6" },
-  { name: "React", color: "#61dafb" },
-  { name: "Next.js", color: "#ffffff" },
-  { name: "Tailwind CSS", color: "#38bdf8" },
-  { name: "AWS", color: "#ff9900" },
-  { name: "Docker", color: "#2496ed" },
-  { name: "Kubernetes", color: "#326ce5" },
-] as const;
+/** One shared path so every layer ends at the same x — no stray “peep” on the right */
+const ROLE_UNDERLINE_PATH =
+  "M3 13.5c38-4.8 74 6.2 112 .5c32-3.8 62-1 94 2.4c24 2.6 48-2 72 1c16 1.6 34-3 50-.5c8 1 18-1.2 26-.8";
 
 export function FinderPortfolioWindow({
   open,
@@ -39,6 +34,7 @@ export function FinderPortfolioWindow({
   } | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [fullscreen, setFullscreen] = useState(false);
+  const roleUnderlineGradId = useId().replace(/:/g, "");
 
   useEffect(() => {
     if (!open || minimized) return;
@@ -138,103 +134,158 @@ export function FinderPortfolioWindow({
           aria-modal="true"
           aria-labelledby="finder-window-title"
         >
-        <header
-          className="finder-window__titlebar"
-          onMouseDown={onTitleMouseDown}
-        >
-          <div className="finder-window__traffic">
-            <button
-              type="button"
-              className="finder-window__dot finder-window__dot--close"
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
-              aria-label="Close window"
-            />
-            <button
-              type="button"
-              className="finder-window__dot finder-window__dot--min"
-              onClick={(e) => {
-                e.stopPropagation();
-                setFullscreen(false);
-                onMinimizedChange(true);
-              }}
-              aria-label="Minimize window"
-            />
-            <button
-              type="button"
-              className="finder-window__dot finder-window__dot--zoom"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFullscreen();
-              }}
-              aria-label={fullscreen ? "Exit full screen" : "Enter full screen"}
-            />
-          </div>
-          <div className="finder-window__title" id="finder-window-title">
-            <span className="finder-window__title-icon" aria-hidden>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
-              </svg>
-            </span>
-            Portfolio
-          </div>
-          <div className="finder-window__titlebar-spacer" />
-        </header>
+          <header
+            className="finder-window__titlebar"
+            onMouseDown={onTitleMouseDown}
+          >
+            <div className="finder-window__traffic">
+              <button
+                type="button"
+                className="finder-window__dot finder-window__dot--close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                }}
+                aria-label="Close window"
+              />
+              <button
+                type="button"
+                className="finder-window__dot finder-window__dot--min"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFullscreen(false);
+                  onMinimizedChange(true);
+                }}
+                aria-label="Minimize window"
+              />
+              <button
+                type="button"
+                className="finder-window__dot finder-window__dot--zoom"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFullscreen();
+                }}
+                aria-label={
+                  fullscreen ? "Exit full screen" : "Enter full screen"
+                }
+              />
+            </div>
+            <div className="finder-window__title" id="finder-window-title">
+              <span className="finder-window__title-icon" aria-hidden>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                </svg>
+              </span>
+              ~whoami
+            </div>
+            <div className="finder-window__titlebar-spacer" />
+          </header>
 
-        <div className="finder-window__body">
-          <div className="finder-portfolio">
-            <div className="finder-portfolio__avatar" aria-hidden />
-            <div className="finder-portfolio__main">
-              <p className="finder-portfolio__hey">Ciao! I&apos;m</p>
-              <h1 className="finder-portfolio__name">Your Name</h1>
-              <p className="finder-portfolio__role">
-                FULL-STACK WEB DEVELOPER AND DEVOPS ENGINEER
-              </p>
-              <div className="finder-portfolio__underline" aria-hidden />
-
-              <div className="finder-portfolio__meta">
-                <span className="finder-portfolio__meta-item">
-                  <span className="finder-portfolio__dot finder-portfolio__dot--blue" />
-                  Pune, India
-                </span>
-                <span className="finder-portfolio__badge">
-                  <span className="finder-portfolio__dot finder-portfolio__dot--green" />
-                  Available for Work
-                </span>
-              </div>
-
-              <p className="finder-portfolio__bio">
-                I build scalable web applications using{" "}
-                {TECH.map((t, i) => (
-                  <span key={t.name}>
-                    <span
-                      className="finder-portfolio__tech"
-                      style={{ color: t.color }}
+          <div className="finder-window__body">
+            <div className="finder-portfolio">
+              <img
+                className="finder-portfolio__avatar"
+                src="/tis100-sad.gif"
+                alt="Animated profile"
+                loading="eager"
+                decoding="async"
+              />
+              <div className="finder-portfolio__main">
+                <p className="finder-portfolio__hey">Hey — I&apos;m</p>
+                <h1 className="finder-portfolio__name">Divya</h1>
+                <p className="finder-portfolio__role">FULL-STACK DEVELOPER</p>
+                <svg
+                  className="finder-portfolio__underline"
+                  viewBox="-6 -3 338 28"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <defs>
+                    <linearGradient
+                      id={roleUnderlineGradId}
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
                     >
-                      {t.name}
-                    </span>
-                    {i < TECH.length - 1
-                      ? i === TECH.length - 2
-                        ? ", and "
-                        : ", "
-                      : ""}
-                  </span>
-                ))}
-                .
-              </p>
+                      <stop offset="0%" stopColor="#005c00" />
+                      <stop offset="48%" stopColor="#00b800" />
+                      <stop offset="100%" stopColor="#006b00" />
+                    </linearGradient>
+                  </defs>
+                  {/* Same geometry + vertical nudge — identical right edge, no extra tail */}
+                  <path
+                    className="finder-portfolio__underline-pass finder-portfolio__underline-pass--back"
+                    d={ROLE_UNDERLINE_PATH}
+                    transform="translate(0, 2.1)"
+                    stroke={`url(#${roleUnderlineGradId})`}
+                    strokeWidth={5.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={0.38}
+                  />
+                  <path
+                    className="finder-portfolio__underline-pass finder-portfolio__underline-pass--mid"
+                    d={ROLE_UNDERLINE_PATH}
+                    stroke={`url(#${roleUnderlineGradId})`}
+                    strokeWidth={3.2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={0.55}
+                  />
+                  <path
+                    className="finder-portfolio__underline-pass finder-portfolio__underline-pass--front"
+                    d={ROLE_UNDERLINE_PATH}
+                    transform="translate(0, -1.5)"
+                    stroke={`url(#${roleUnderlineGradId})`}
+                    strokeWidth={2.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={0.92}
+                  />
+                  {/* Left smudge */}
+                  <path
+                    d="M2 11.5q-4 1.5-5.5 4.2"
+                    stroke={`url(#${roleUnderlineGradId})`}
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    opacity={0.45}
+                  />
+                  <path
+                    d="M4 14.8q-3.8 1.4-7 2.2"
+                    stroke={`url(#${roleUnderlineGradId})`}
+                    strokeWidth={1.4}
+                    strokeLinecap="round"
+                    opacity={0.38}
+                  />
+                </svg>
 
-              <ul className="finder-portfolio__pills" aria-label="Tech stack">
-                {TECH.map((t) => (
-                  <li key={t.name} className="finder-portfolio__pill">
-                    <span style={{ color: t.color }}>{t.name}</span>
-                  </li>
-                ))}
-              </ul>
+                <div className="finder-portfolio__meta">
+                  <span className="finder-portfolio__meta-item">
+                    <span className="finder-portfolio__dot finder-portfolio__dot--blue" />
+                    Pune, India
+                  </span>
+                  {/* <span className="finder-portfolio__badge">
+                    <span className="finder-portfolio__dot finder-portfolio__dot--green" />
+                    Available for Work
+                  </span> */}
+                </div>
+
+                <p className="finder-portfolio__bio">
+                  Turns vague ideas into fast, reliable systems—from refined
+                  interfaces to APIs, cloud, and containers.
+                </p>
+
+                <FinderPortfolioStack />
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
