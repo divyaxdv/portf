@@ -85,7 +85,6 @@ export function FinderPortfolioStack() {
                   className="finder-portfolio__icon-pill"
                   aria-label={label}
                   data-tooltip={label}
-                  title={label}
                 >
                   <Icon
                     className="finder-portfolio__icon-pill-svg"
